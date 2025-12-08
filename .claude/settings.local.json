@@ -9,7 +9,12 @@
       "Bash(python orchestration/init_database.py:*)",
       "Bash(python data_generators/generate_data.py:*)",
       "Bash(python -m data_generators.generate_data:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: initial project setup with data generation layer\n\n- Set up project structure (data_generators, orchestration, dbt_project, etc.)\n- Created DuckDB warehouse with bronze/silver/gold schemas\n- Implemented configurable data generators with chaos injection\n- Generated 7 days of historical manufacturing data (2025-12-01 to 2025-12-07)\n\nData chaos features implemented:\n- Product name variations (Iron Plate vs iron_plate vs IronPlate)\n- Machine ID inconsistencies in operator logs\n- 7.5% null values in sensor readings\n- Timestamp drift (±5 minutes)\n- 3% duplicate production batches\n- Smelter #2 degrading performance (2% per day)\n- Timezone chaos (30% local time vs UTC)\n\nGround truth validation data included for quality assurance.\n\nGenerated with Claude Code\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(python verify_data.py:*)"
     ],
     "deny": [],
     "ask": []
