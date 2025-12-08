@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git config:*)",
+      "Bash(mkdir:*)",
+      "Bash(pip install:*)",
+      "Bash(python orchestration/init_database.py:*)",
+      "Bash(python data_generators/generate_data.py:*)",
+      "Bash(python -m data_generators.generate_data:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
