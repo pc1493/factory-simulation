@@ -2,7 +2,7 @@
 
 **Status:** In Development
 **Timeline:** Dec 6 - Dec 20, 2025
-**Current Phase:** Data Generation Complete
+**Current Phase:** Dashboard & Visualization Complete
 
 ## Project Overview
 
@@ -101,6 +101,22 @@ python verify_data.py
 
 See [DATA_SAMPLES.md](DATA_SAMPLES.md) for detailed examples.
 
+### Run Dashboard
+
+```bash
+# Launch interactive dashboard
+streamlit run streamlit_app/dashboard.py
+```
+
+Dashboard features:
+- 🏭 Live machine status monitoring
+- 📈 Efficiency degradation tracking
+- 🔄 Product flow visualization
+- 🚨 Real-time data quality alerts
+- ⏯️ Time-travel through 7 days of data
+
+See [streamlit_app/README.md](streamlit_app/README.md) for dashboard details.
+
 ## Architecture Decisions
 
 ### Data Generation Layer
@@ -129,6 +145,29 @@ Implemented chaos types:
 7. **Timezone chaos**: 30% in local time (MST) vs UTC
 8. **Performance degradation**: Smelter #2 loses 2% efficiency per day
 
+### Dashboard Visualization Layer
+
+**Decision**: Build 4-quadrant "factory control center" layout
+- **Rationale**: Mental model of standing in a control room watching factory floor
+- **Visual Design**: Industrial dark theme (#1e293b) with color-coded machine status
+
+**Quadrants:**
+1. **Production Floor** (Top-Left): Live machine cards with status, progress bars, efficiency metrics
+2. **Machine Health Monitor** (Top-Right): Plotly line charts showing degradation over time, sensor gauges
+3. **Product Flow Pipeline** (Bottom-Left): Sankey diagram visualizing ore → plates → gears
+4. **Data Quality Alerts** (Bottom-Right): Real-time chaos detection with severity indicators
+
+**Time Controls:**
+- Play/Pause simulation with auto-advance
+- Speed control: 1x, 10x, 100x, 1000x (watch 7 days in ~10 seconds at max speed)
+- Day selection: Jump to any specific day
+- Progress bar showing current position in timeline
+
+**Color System:**
+- 🟢 Healthy: >90% efficiency
+- 🟡 Warning: 70-90% efficiency
+- 🔴 Critical: <70% efficiency
+
 ## Progress Tracker
 
 ### Week 1: Foundation (Dec 6-13)
@@ -140,7 +179,9 @@ Implemented chaos types:
 - [ ] Gold layer dimensional model
 
 ### Week 2: Analytics & Polish (Dec 14-20)
-- [ ] Streamlit dashboard
+- [x] Streamlit dashboard with 4-quadrant layout
+- [x] Interactive time-travel controls
+- [x] Real-time chaos visualization
 - [ ] Ground truth validation testing
 - [ ] End-to-end pipeline orchestration
 - [ ] Documentation and examples
@@ -158,5 +199,5 @@ Pipeline output must match generator's ground truth within 2% margin of error.
 
 ---
 
-**Last Updated:** 2025-12-06
-**Current Sprint:** Week 1 - Data Generation COMPLETE, Bronze Layer Next
+**Last Updated:** 2025-12-08
+**Current Sprint:** Dashboard Complete - Interactive factory floor visualization with time-travel controls!
