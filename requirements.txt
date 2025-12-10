@@ -12,6 +12,7 @@ faker==22.0.0
 
 # Visualization
 streamlit==1.29.0
+plotly==5.18.0
 
 # Testing
 pytest==7.4.3
