@@ -95,15 +95,20 @@ def inject_timezone_chaos(timestamp: datetime, use_utc: bool = True) -> datetime
     """
     Randomly convert timestamp to local time instead of UTC.
 
+    This simulates data chaos where some timestamps are recorded in local factory
+    time (MST) rather than standardized UTC, creating inconsistency.
+
     Args:
         timestamp: Original timestamp (assumed to be UTC)
         use_utc: If True, sometimes convert to local time
 
     Returns:
-        Timestamp (possibly in local time)
+        Timestamp (possibly in local time MST)
     """
     if use_utc and random.random() < CHAOS_CONFIG["timezone_chaos_probability"]:
-        # Convert to MST (UTC-7)
+        # Convert FROM UTC TO MST (UTC-7)
+        # MST is 7 hours behind UTC, so subtract 7 hours
+        # Example: 14:00 UTC becomes 07:00 MST
         return timestamp - timedelta(hours=7)
     return timestamp
 

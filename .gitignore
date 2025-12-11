@@ -21,6 +21,10 @@ dbt_project/logs/
 raw_data/
 ground_truth/
 
+# Logs
+logs/
+*.log
+
 # IDE
 .vscode/
 .idea/

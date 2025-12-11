@@ -47,10 +47,13 @@ print("7-DAY TOTALS:")
 print("=" * 60)
 print(f"Total batches: {total_batches}")
 print(f"Total units produced: {total_units}")
-print(f"Total defective: {total_defects} ({total_defects/total_units*100:.2f}%)")
+defect_pct = (total_defects/total_units*100) if total_units > 0 else 0
+print(f"Total defective: {total_defects} ({defect_pct:.2f}%)")
 print(f"Total energy consumed: {total_energy:.2f} kWh")
-print(f"Average batches/day: {total_batches/7:.1f}")
-print(f"Average units/day: {total_units/7:.1f}")
+avg_batches = total_batches / 7 if total_batches > 0 else 0
+avg_units = total_units / 7 if total_units > 0 else 0
+print(f"Average batches/day: {avg_batches:.1f}")
+print(f"Average units/day: {avg_units:.1f}")
 
 print("\n" + "=" * 60)
 print("SMELTER #2 DEGRADATION TRACKING")

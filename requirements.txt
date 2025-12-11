@@ -10,6 +10,9 @@ dbt-duckdb==1.7.1
 # Data Generation
 faker==22.0.0
 
+# Scheduling
+apscheduler==3.10.4
+
 # Visualization
 streamlit==1.29.0
 plotly==5.18.0

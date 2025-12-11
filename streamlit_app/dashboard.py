@@ -9,6 +9,11 @@ from datetime import datetime, timedelta
 import time
 import plotly.graph_objects as go
 import plotly.express as px
+import sys
+
+# Add parent directory to path to import config
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from data_generators.config import START_DATE, END_DATE
 
 # Page config
 st.set_page_config(
@@ -85,12 +90,14 @@ if 'last_update' not in st.session_state:
 # Data loading functions
 @st.cache_data
 def load_all_data():
-    """Load all 7 days of ground truth data."""
+    """Load all ground truth data from START_DATE to END_DATE."""
     data_by_day = {}
-    start_date = datetime(2025, 12, 1).date()
 
-    for day in range(7):
-        date = start_date + timedelta(days=day)
+    # Calculate number of days from config
+    num_days = (END_DATE - START_DATE).days + 1
+
+    for day in range(num_days):
+        date = START_DATE + timedelta(days=day)
         date_str = date.strftime("%Y-%m-%d")
         truth_file = Path(f"ground_truth/{date_str}/truth.json")
 
@@ -103,8 +110,7 @@ def load_all_data():
 @st.cache_data
 def load_raw_batches(day):
     """Load raw production batches for a specific day."""
-    start_date = datetime(2025, 12, 1).date()
-    date = start_date + timedelta(days=day - 1)
+    date = START_DATE + timedelta(days=day - 1)
     date_str = date.strftime("%Y-%m-%d")
     batch_file = Path(f"raw_data/{date_str}/production_batches.csv")
 
@@ -115,8 +121,7 @@ def load_raw_batches(day):
 @st.cache_data
 def load_sensor_logs(day):
     """Load sensor logs for a specific day."""
-    start_date = datetime(2025, 12, 1).date()
-    date = start_date + timedelta(days=day - 1)
+    date = START_DATE + timedelta(days=day - 1)
     date_str = date.strftime("%Y-%m-%d")
     sensor_file = Path(f"raw_data/{date_str}/sensor_logs.json")
 
@@ -164,11 +169,14 @@ def calculate_chaos_metrics(day):
 # Load data
 all_data = load_all_data()
 
+# Calculate total number of days
+TOTAL_DAYS = (END_DATE - START_DATE).days + 1
+
 # ============================================================================
 # HEADER - Factory Control Center
 # ============================================================================
 st.title("🏭 FACTORY CONTROL CENTER")
-st.markdown(f"### Dec 1-7, 2025 | Currently viewing: **Day {st.session_state.current_day}**")
+st.markdown(f"### {START_DATE.strftime('%b %d')} - {END_DATE.strftime('%b %d, %Y')} | Currently viewing: **Day {st.session_state.current_day}**")
 
 # ============================================================================
 # TOP CONTROL BAR
@@ -180,8 +188,8 @@ with col1:
     st.markdown("#### 📅 Day Selection")
     day_select = st.selectbox(
         "Jump to Day:",
-        options=[1, 2, 3, 4, 5, 6, 7],
-        index=st.session_state.current_day - 1,
+        options=list(range(1, TOTAL_DAYS + 1)),
+        index=min(st.session_state.current_day - 1, TOTAL_DAYS - 1),
         key="day_selector"
     )
     if day_select != st.session_state.current_day:
@@ -217,8 +225,8 @@ with col3:
 
 with col4:
     st.markdown("#### 📊 Progress")
-    progress = (st.session_state.current_day - 1) / 6
-    st.progress(progress, text=f"Day {st.session_state.current_day} of 7")
+    progress = (st.session_state.current_day - 1) / (TOTAL_DAYS - 1) if TOTAL_DAYS > 1 else 0
+    st.progress(progress, text=f"Day {st.session_state.current_day} of {TOTAL_DAYS}")
 
 st.markdown("---")
 
@@ -503,7 +511,9 @@ if current_data:
         st.metric("Defective Units", totals.get('units_defective', 0))
 
     with stat_cols[3]:
-        defect_rate = (totals.get('units_defective', 0) / totals.get('units_produced', 1)) * 100
+        units_produced = totals.get('units_produced', 0)
+        units_defective = totals.get('units_defective', 0)
+        defect_rate = (units_defective / units_produced * 100) if units_produced > 0 else 0
         st.metric("Defect Rate", f"{defect_rate:.2f}%")
 
     with stat_cols[4]:
@@ -516,7 +526,7 @@ if st.session_state.is_playing:
     time.sleep(2 / st.session_state.speed)  # Update based on speed
 
     # Advance to next day
-    if st.session_state.current_day < 7:
+    if st.session_state.current_day < TOTAL_DAYS:
         st.session_state.current_day += 1
         st.rerun()
     else:
